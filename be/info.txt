@@ -1,0 +1,98 @@
+
+
+
+Database model
+
+user ->
+document ->
+user < -- > document - one to many
+
+1. Phase 1 : PHASE DONE
+- table for user  x DONE
+- table for documents x DONE
+- a user can have multiple documents, implement one to many x DONE
+- auth ? later, post pont it after phase 2
+
+2. Phase 2 - focus on file router / processing : PHASE DONE
+- add query parameters for the following cases x DONE
+    -- limit : to limit the files retrieved by API, store default limit
+               in process env
+    -- offset : to be able to truncate the files, store the default
+               offset
+    -- query params : to retrieve the files by fileType, fileSize,
+               and search it by name
+- extract metadata from a file
+- create a table metadata, create a one2mane between users and files done
+- retrieve file metadata for all files and given file
+- rename an file for a user 
+- delete a file for a user
+
+3. Phase 3 - implement sharing functionalities  I AM HERE
+- also test in a separate db file, the sharing models, UPDATE and DELETE on cascade TOP_PRIORITY
+ - implement the sharing model x done 
+ - implement a route for sharing files between users, adding permissions    TO PICK
+ - add the functionality, if a file will be deleted, the sharing model will be deleted too  TO PICK
+ - implement a router to retrieve all the files shared for an user ,shared for me'  TO PICK
+ - implement an event based functionality for the users to receive notifications when a file is shared with him 
+ 
+ 4. Phase 4 - refactor base code, implement auth with web tokens
+ 5. Phase 5 - implement a catching mechanism for downloaded files, and retrieved files ??
+ 6. Phase 6 - if general functionalities are developed on the be, create a design for front end, and implement everything first without the AUTH 
+ 7. Phase 7 - pick between dockerization of the app and implementing the following versioning / grouping /  document conversion / text extraction/ image processing
+
+Easy:
+  File Upload: Allow users to upload files to the server. done
+  File Download: Enable users to download files from the server. done
+  File Deletion: Allow users to delete files they have previously uploaded. done
+Intermediate:
+  File Metadata Retrieval: Provide an endpoint to retrieve metadata (such as file size, upload date, etc.) for a given file.  done
+  File Listing: Implement an endpoint to list all files uploaded by a specific user. done
+  File Renaming: Allow users to rename files they have uploaded. done
+  Implement for file download, a cache mechanism ( look into LRE )
+WITH HIGH PRIORITY
+Harder:
+  File Sharing: Implement a mechanism for users to share files with other users, possibly through unique links or permissions.   to pick up next after intermediate functionalities
+  File Versioning: Enable versioning for files so that users can upload new versions of existing files without overwriting them.
+  File Search: Implement a search functionality to allow users to search for files based on various criteria (e.g., file name, metadata, etc.). done
+
+File Processing Ideas:
+  Image Processing: Implement functionality to resize, crop, or apply filters to images uploaded by users. high  priority medium difficulty? alter table, save image resolution
+  Document Conversion: Allow users to convert documents from one format to another (e.g., PDF to DOCX). medium priority medium difficulty
+  Text Extraction: Implement functionality to extract text from documents or images using OCR (Optical Character Recognition) technology. low priority high difficulty teseract.js
+
+
+All the file processing ideas can be implemented both on fe and be
+For this sake of the project I will implement it on be
+
+Image processing :
+  - create a new table to store the image processing changes, such as: resize, crop etc other system defined image operations
+  - alter the file table, add a column specific for imagesHistory, to be used just on the file which are images, to link the child history table
+    another approach will be to store the images in another table??
+  - define an endpoint that will contain in the body, information about resize crop etc
+    the endpoint should return the new image, and create a new version of the image
+  - define an endpoint that can retrieve all the changes made to an image for backup reasons, image restore
+
+
+TODO later FRONT END APP :
+- pass the login first, hardcode the user
+- create a view where the user can upload a file
+                               a tab where can see a ,,directory,, with all the uploaded files
+                               a tab where can see files shared with him
+                               a notification bell to receive notification when a file has been shared with him
+I should Implemenet a vertical tab navbar
+The navbar should have :
+- one menu to
+
+
+
+  File Deletion: Allow users to delete files they have previously uploaded. done
+  File Renaming: Allow users to rename files they have uploaded. done
+  File Sharing: Implement a mechanism for users to share files with other users, possibly through unique links or permissions.   to pick up next after intermediate functionalities
+                about this, design the table many-to-many
+                think about the links or permissions first
+                sharing the file
+                create an event based small functionality to notify the user about the sharing of the files : user who shared, file name
+                later, as event based I can implement, sharing of the file, deletion of a shared file, renaming
+                web socket? and test it with postman YES
+
+                refactor later file router api for better error handling
